@@ -8,16 +8,36 @@ mix (h1:t1) (h2:t2)
     | h1 <= h2 = h1:(mix t1 (h2:t2))
     | otherwise = h2:(mix t2 (h1:t1))
 
-sieve    :: [Int] -> [Int] -> [Int]     -- sieve of eratosthenes
-firstn   ::  Int  -> [Int]              -- returns first n primes
-primesto ::  Int  -> [Int]              -- returns primes up to p
+member :: Int -> [Int] -> Bool
+member x [] = False
+member x (h:t)
+    | h > x = False
+    | x > h = member x t
+    | otherwise = True
 
-mergesort :: [Int]  -> [Int]     -- sorts list using merge sort alg
-quicksort :: [Int]  -> [Int]     -- sorts list using quicksort alg
-infix2rpn :: String -> String    -- converts expression from infix to
-                                 -- reverse polish notation
-evalrpn   :: String ->  Int      -- evaluates expression given in
-                                 -- reverse polish notation
+sieve    :: [Int] -> [Int] -> [Int]     -- sieve of eratosthenes
+sieve (potentialPrime:potentialTail) composites 
+    | member potentialPrime composites = sieve potentialTail composites
+    | otherwise = potentialPrime:(sieve potentialTail (mix composites (prods potentialPrime)))
+
+ctake :: Int -> [Int] -> [Int]
+ctake 0 _      = []
+ctake _ []     = []
+ctake n (x:xs) = x : ctake (n-1) xs
+
+firstn   ::  Int  -> [Int]              -- returns first n primes
+firstn n = ctake n (sieve [2..] [])
+
+-- primesto ::  Int  -> [Int]              -- returns primes up to p
+
+-- mergesort :: [Int]  -> [Int]     -- sorts list using merge sort alg
+-- quicksort :: [Int]  -> [Int]     -- sorts list using quicksort alg
+-- infix2rpn :: String -> String    -- converts expression from infix to
+--                                  -- reverse polish notation
+-- evalrpn   :: String ->  Int      -- evaluates expression given in
+--                                  -- reverse polish notation
+
+
 
 -- Similar to words function, but handles missing/extra spaces
 -- between ops, digits, parens.  Note: not general or robust!
