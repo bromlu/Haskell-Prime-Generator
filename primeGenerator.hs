@@ -41,16 +41,42 @@ quicksort (pivot:rest) = lower ++ [pivot] ++ upper
     where 
         lower = (quicksort (filter (<=pivot) rest))
         upper = (quicksort (filter (>pivot) rest))
-        
+
 infix2rpn :: String -> String    -- converts expression from infix to reverse polish notation
-infix2rpn input = unwords (parse (mywords input))
+infix2rpn input = unwords (filter (notParen) (parse (mywords input)))
         where 
-            isop    c = (c == "+" || c == "*")
+            notParen c = (c /= "(" && c /= ")")
             isdigit c = (c >= "0" && c <= "9")
+            parseTerm input = factor ++ (parseFactors updatedInput)
+                where 
+                    factor = parseFactor input
+                    updatedInput = drop (length factor) input
+            parseFactor [] = []
+            parseFactor (h:t)
+                | h == "(" = [h] ++ (parse t)
+                | h == ")" = [h]
+                | isdigit h = [h] 
+            parseTerms [] = []
+            parseTerms (h:t) 
+                | h == "+" = term ++ [h] ++ (parseTerms updatedT)
+                | h == ")" = [h]
+                | otherwise = []
+                where 
+                    term = parseTerm t
+                    updatedT = drop (length term) t
+            parseFactors [] = []
+            parseFactors (h:t)
+                | h == "*" = factor ++ [h] ++ (parseFactors updatedT)
+                | h == ")" = [h]
+                | otherwise = []
+                where 
+                    factor = parseFactor t
+                    updatedT = drop (length factor) t
             parse [] = []
-            parse (h:t)
-                | isop h = (parse t) ++ [h]
-                | isdigit h = [h] ++ (parse t)
+            parse input = term ++ (parseTerms updatedInput)
+                where 
+                    term = parseTerm input
+                    updatedInput = drop (length term) input
 
 evalrpn   :: String ->  Int      -- evaluates expression given in reverse polish notation
 evalrpn input = ((evaluate [] (mywords input)) !! 0)
