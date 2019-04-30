@@ -52,9 +52,19 @@ infix2rpn input = unwords (parse (mywords input))
                 | isop h = (parse t) ++ [h]
                 | isdigit h = [h] ++ (parse t)
 
-
--- evalrpn   :: String ->  Int      -- evaluates expression given in
---                                  -- reverse polish notation
+evalrpn   :: String ->  Int      -- evaluates expression given in reverse polish notation
+evalrpn input = ((evaluate [] (mywords input)) !! 0)
+        where 
+            isdigit c = (c >= "0" && c <= "9")
+            evaluate numbers [] = numbers
+            evaluate numbers (expH:expT)
+                | isdigit expH = evaluate ([read expH :: Int] ++ numbers) expT
+                | expH == "+" = evaluate ((add (fst splitNumbers)) ++ (snd splitNumbers)) expT
+                | expH == "*" = evaluate ((mult (fst splitNumbers)) ++ (snd splitNumbers)) expT
+                where 
+                    splitNumbers = splitAt 2 numbers
+                    add numToEval = [(numToEval !! 0) + (numToEval !! 1)]
+                    mult numToEval = [(numToEval !! 0) * (numToEval !! 1)]
 
 -- Similar to words function, but handles missing/extra spaces
 -- between ops, digits, parens.  Note: not general or robust!
