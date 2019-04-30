@@ -21,7 +21,20 @@ firstn n = take n (sieve [2..] [])
 primesto ::  Int  -> [Int]              -- returns primes up to p
 primesto n = takeWhile (<=n) (sieve [2..] [])
 
--- mergesort :: [Int]  -> [Int]     -- sorts list using merge sort alg
+merge :: [Int] -> [Int] -> [Int]
+merge lst [] = lst
+merge [] lst = lst
+merge (h1:t1) (h2:t2)
+    | h1 <= h2 = h1:(mix t1 (h2:t2))
+    | otherwise = h2:(mix (h1:t1) t2)
+
+mergesort :: [Int]  -> [Int]     -- sorts list using merge sort alg
+mergesort [] = []
+mergesort lst
+    | length lst == 1 = lst
+    | otherwise = merge (mergesort (fst splitList)) (mergesort (snd splitList)) 
+    where splitList = splitAt (div (length lst) 2) lst
+            
 -- quicksort :: [Int]  -> [Int]     -- sorts list using quicksort alg
 -- infix2rpn :: String -> String    -- converts expression from infix to
 --                                  -- reverse polish notation
