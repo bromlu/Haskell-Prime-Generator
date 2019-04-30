@@ -15,13 +15,8 @@ sieve (potentialPrime:potentialTail) (composite:compositesTail)
     | potentialPrime == composite = sieve potentialTail compositesTail
     | otherwise = potentialPrime : (sieve potentialTail (mix (composite:compositesTail) (prods potentialPrime)))
 
-ctake :: Int -> [Int] -> [Int]
-ctake 0 _      = []
-ctake _ []     = []
-ctake n (x:xs) = x : ctake (n-1) xs
-
 firstn   ::  Int  -> [Int]              -- returns first n primes
-firstn n = ctake n (sieve [2..] [])
+firstn n = take n (sieve [2..] [])
 
 taketo :: Int -> [Int] -> [Int]
 taketo 0 _ = []
