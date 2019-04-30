@@ -25,8 +25,8 @@ merge :: [Int] -> [Int] -> [Int]
 merge lst [] = lst
 merge [] lst = lst
 merge (h1:t1) (h2:t2)
-    | h1 <= h2 = h1:(mix t1 (h2:t2))
-    | otherwise = h2:(mix (h1:t1) t2)
+    | h1 <= h2 = h1:(merge t1 (h2:t2))
+    | otherwise = h2:(merge (h1:t1) t2)
 
 mergesort :: [Int]  -> [Int]     -- sorts list using merge sort alg
 mergesort [] = []
