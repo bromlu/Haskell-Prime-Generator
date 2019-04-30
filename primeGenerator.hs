@@ -34,8 +34,14 @@ mergesort lst
     | length lst == 1 = lst
     | otherwise = merge (mergesort (fst splitList)) (mergesort (snd splitList)) 
     where splitList = splitAt (div (length lst) 2) lst
-            
--- quicksort :: [Int]  -> [Int]     -- sorts list using quicksort alg
+
+quicksort :: [Int]  -> [Int]     -- sorts list using quicksort alg
+quicksort [] = []
+quicksort (pivot:rest) = lower ++ [pivot] ++ upper
+    where 
+        lower = (quicksort (filter (<=pivot) rest))
+        upper = (quicksort (filter (>pivot) rest))
+        
 -- infix2rpn :: String -> String    -- converts expression from infix to
 --                                  -- reverse polish notation
 -- evalrpn   :: String ->  Int      -- evaluates expression given in
