@@ -42,8 +42,17 @@ quicksort (pivot:rest) = lower ++ [pivot] ++ upper
         lower = (quicksort (filter (<=pivot) rest))
         upper = (quicksort (filter (>pivot) rest))
         
--- infix2rpn :: String -> String    -- converts expression from infix to
---                                  -- reverse polish notation
+infix2rpn :: String -> String    -- converts expression from infix to reverse polish notation
+infix2rpn input = unwords (parse (mywords input))
+        where 
+            isop    c = (c == "+" || c == "*")
+            isdigit c = (c >= "0" && c <= "9")
+            parse [] = []
+            parse (h:t)
+                | isop h = (parse t) ++ [h]
+                | isdigit h = [h] ++ (parse t)
+
+
 -- evalrpn   :: String ->  Int      -- evaluates expression given in
 --                                  -- reverse polish notation
 
