@@ -5,20 +5,15 @@ mix      :: [Int] -> [Int] -> [Int]     -- mix two inf lists
 mix lst [] = lst
 mix [] lst = lst
 mix (h1:t1) (h2:t2)
-    | h1 <= h2 = h1:(mix t1 (h2:t2))
-    | otherwise = h2:(mix t2 (h1:t1))
-
-member :: Int -> [Int] -> Bool
-member x [] = False
-member x (h:t)
-    | h > x = False
-    | x > h = member x t
-    | otherwise = True
+    | h1 == h2 = h1:(mix t1 t2)
+    | h1 < h2 = h1:(mix t1 (h2:t2))
+    | otherwise = h2:(mix (h1:t1) t2)
 
 sieve    :: [Int] -> [Int] -> [Int]     -- sieve of eratosthenes
-sieve (potentialPrime:potentialTail) composites 
-    | member potentialPrime composites = sieve potentialTail composites
-    | otherwise = potentialPrime:(sieve potentialTail (mix composites (prods potentialPrime)))
+sieve (potentialPrime:potentialTail) [] = potentialPrime : (sieve potentialTail (prods potentialPrime))
+sieve (potentialPrime:potentialTail) (composite:compositesTail) 
+    | potentialPrime == composite = sieve potentialTail compositesTail
+    | otherwise = potentialPrime : (sieve potentialTail (mix (composite:compositesTail) (prods potentialPrime)))
 
 ctake :: Int -> [Int] -> [Int]
 ctake 0 _      = []
@@ -44,8 +39,6 @@ primesto n = taketo n (sieve [2..] [])
 --                                  -- reverse polish notation
 -- evalrpn   :: String ->  Int      -- evaluates expression given in
 --                                  -- reverse polish notation
-
-
 
 -- Similar to words function, but handles missing/extra spaces
 -- between ops, digits, parens.  Note: not general or robust!
