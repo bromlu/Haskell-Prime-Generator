@@ -1,5 +1,13 @@
 prods    ::  Int  -> [Int]              -- gen inf list of products
+prods x = [x * n | n <- [x ..]]
+
 mix      :: [Int] -> [Int] -> [Int]     -- mix two inf lists
+mix lst [] = lst
+mix [] lst = lst
+mix (h1:t1) (h2:t2)
+    | h1 <= h2 = h1:(mix t1 (h2:t2))
+    | otherwise = h2:(mix t2 (h1:t1))
+
 sieve    :: [Int] -> [Int] -> [Int]     -- sieve of eratosthenes
 firstn   ::  Int  -> [Int]              -- returns first n primes
 primesto ::  Int  -> [Int]              -- returns primes up to p
@@ -10,7 +18,7 @@ infix2rpn :: String -> String    -- converts expression from infix to
                                  -- reverse polish notation
 evalrpn   :: String ->  Int      -- evaluates expression given in
                                  -- reverse polish notation
-                                 
+
 -- Similar to words function, but handles missing/extra spaces
 -- between ops, digits, parens.  Note: not general or robust!
 mywords :: String -> [String]
