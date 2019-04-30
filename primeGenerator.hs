@@ -28,7 +28,15 @@ ctake n (x:xs) = x : ctake (n-1) xs
 firstn   ::  Int  -> [Int]              -- returns first n primes
 firstn n = ctake n (sieve [2..] [])
 
--- primesto ::  Int  -> [Int]              -- returns primes up to p
+taketo :: Int -> [Int] -> [Int]
+taketo 0 _ = []
+taketo _ [] = []
+taketo n (x:xs)
+    | x > n = []
+    | otherwise = x : taketo n xs
+
+primesto ::  Int  -> [Int]              -- returns primes up to p
+primesto n = taketo n (sieve [2..] [])
 
 -- mergesort :: [Int]  -> [Int]     -- sorts list using merge sort alg
 -- quicksort :: [Int]  -> [Int]     -- sorts list using quicksort alg
